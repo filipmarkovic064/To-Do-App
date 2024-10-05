@@ -1,0 +1,54 @@
+﻿@model List<demoApp.Models.toDoItem>
+
+<div style="background-color:rgb(254 242 242); border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);padding: 20px;">
+<h1 class="text-center">To-Do List:</h1>
+@*Link for the checkmark*@
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+    <ul style="list-style-type: none;">
+        @*For each of the tasks i create a button that will become a checkmark if clicked on to mark that its finished*@
+        @foreach (var todo in Model){
+            <li>
+                @if(!todo.IsCompleted){ 
+                    <form asp-action="Complete" method ="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@todo.Id"/>
+                        <button type = "submit" style =" width:30px; height:30px;border:none; border-radius: 50%;background-color:white; vertical-align: middle;"></button>
+                    </form>
+                }
+                else{
+                    <button type="submit" style="width: 30px; height: 30px; border: none; border-radius: 50%; background-color: white;">
+                    <i class="fas fa-check" style="color: green;"></i>
+                    </button>
+                }
+                @todo.Title - Completed: @todo.IsCompleted <br> 
+                @if(todo.dueDate != DateTime.MinValue){
+                    <p>Due Date: @todo.dueDate.ToString("dd/MM/yyyy")</p>
+                }
+
+                @if(todo.dueTime != TimeOnly.MinValue){
+                    <p>Due Time: @todo.dueTime.ToString("HH:mm")</p>
+                }
+                <br>
+                <br>
+            </li>
+        }
+    </ul>
+@*Add a new task button*@
+<h3> Add new task:</h3>
+<form asp-action="ADD" method ="post">
+    <label for ="Title">Task Title:</label>
+    <input type ="text" name="Title" required/>
+
+    <label for ="Due Date">Due Date:</label>
+    <input type ="date" name="DueDate"/>
+    
+    <label for ="Due Time">Due Time:</label>
+    <input type ="time" name="DueTime"/>
+<button type="submit">Add Task</button> 
+</form>
+<br>
+<br>
+
+</div>
