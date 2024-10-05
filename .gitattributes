@@ -1,1 +1,5 @@
 *.html linguist-hidden
+
+*.cs linguist-language=CSharp
+*.csproj linguist-language=CSharp
+*.sln linguist-language=CSharp
