@@ -1,16 +1,16 @@
 ﻿@model List<demoApp.Models.toDoItem>
 
-<div style="background-color:rgb(254 242 242); border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);padding: 20px;">
+<div style="background-color:rgb(254 242 242); border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);padding: 20px; min-height: 90vh; margin-top: 20px;">
 <h1 class="text-center">To-Do List:</h1>
-@*Link for the checkmark*@
+@*Link for the icons*@
 <head>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-
     <ul style="list-style-type: none;">
         @*For each of the tasks i create a button that will become a checkmark if clicked on to mark that its finished*@
         @foreach (var todo in Model){
             <li>
+                  <div class="task-item">
                 @if(!todo.IsCompleted){ 
                     <form asp-action="Complete" method ="post" style="display:inline;">
                         <input type="hidden" name="id" value="@todo.Id"/>
@@ -22,33 +22,56 @@
                     <i class="fas fa-check" style="color: green;"></i>
                     </button>
                 }
-                @todo.Title - Completed: @todo.IsCompleted <br> 
-                @if(todo.dueDate != DateTime.MinValue){
+
+                <span class="task-title">@todo.Title</span>
+
+                @if(todo.dueDate != DateTime.MinValue && todo.dueTime != TimeOnly.MinValue){
+                    <p>Due Date & Time: @todo.dueDate.ToString("dd/MM/yyyy") at @todo.dueTime.ToString("HH:mm")</p>
+                }
+                else if(todo.dueDate != DateTime.MinValue){
                     <p>Due Date: @todo.dueDate.ToString("dd/MM/yyyy")</p>
                 }
 
-                @if(todo.dueTime != TimeOnly.MinValue){
+                else if(todo.dueTime != TimeOnly.MinValue){
                     <p>Due Time: @todo.dueTime.ToString("HH:mm")</p>
                 }
-                <br>
-                <br>
+                <form asp-action="Delete" method="post" style="display:inline;">
+                <input type="hidden" name="id" value="@todo.Id"/>
+                <button type="submit" class="delete-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+                </form>
+                </div>
             </li>
         }
     </ul>
-@*Add a new task button*@
-<h3> Add new task:</h3>
-<form asp-action="ADD" method ="post">
-    <label for ="Title">Task Title:</label>
-    <input type ="text" name="Title" required/>
+<!-- Plus Button to Open Modal -->
+    <button type="submit" id="openModalBtn" class="plus-btn">+</button>   <p class="add-task-text">Add a task</p>
 
-    <label for ="Due Date">Due Date:</label>
-    <input type ="date" name="DueDate"/>
-    
-    <label for ="Due Time">Due Time:</label>
-    <input type ="time" name="DueTime"/>
-<button type="submit">Add Task</button> 
-</form>
-<br>
-<br>
+    <!-- Modal Structure -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add New Task</h3>
+            <form asp-action="ADD" method="post" class="task-form">
+                <div class="form-group">
+                    <label for="Title">Task Title:</label>
+                    <input type="text" name="Title" required/>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="DueDate">Due Date: (Optional)</label>
+                    <input type="date" name="DueDate"/>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="DueTime">Due Time: (Optional)</label>
+                    <input type="time" name="DueTime"/>
+                </div>
+                <br>
+                <button type="submit">Add Task</button> 
+            </form>
+        </div>
+    </div>
 
 </div>

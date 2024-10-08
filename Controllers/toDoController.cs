@@ -38,4 +38,15 @@ public class HomeController : Controller
     }
     return RedirectToAction("Index");
   }
+
+
+  public IActionResult Delete(int id){
+    foreach(var todo in toDos){
+      if(todo.Id == id){
+        toDos.Remove(todo);
+        break;
+      }
+    }
+    return RedirectToAction("Index");
+  }
 }
